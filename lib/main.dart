@@ -13,27 +13,33 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF222831),
-        primaryColor: Color(0xFF82A3A9),
-        cardColor: Color(0xFF393E46),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF393E46),
-          iconTheme: IconThemeData(color: Color(0xFFEEEEEE)),
+        scaffoldBackgroundColor: const Color(0xFFFDF6EC), // Soft creamy white
+        primaryColor: const Color(0xFF355070), // Muted navy blue
+        cardColor: const Color(0xFFFBE4D8), // Soft peach-pink
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF355070), // AppBar navy
+          iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
-            color: Color(0xFFEEEEEE),
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Color(0xFFEEEEEE), fontSize: 16),
-          bodyMedium: TextStyle(color: Color(0xFFEEEEEE), fontSize: 14),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Color(0xFF3E3E3E), fontSize: 16),
+          bodyMedium: TextStyle(color: Color(0xFF3E3E3E), fontSize: 14),
+          titleMedium: TextStyle(
+            color: Color(0xFFB56576), // Accent: Dusty pink
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        colorScheme: ColorScheme.dark(
-          primary: Color(0xFF82A3A9),
-          secondary: Color(0xFFEEEEEE),
-          background: Color(0xFF222831),
-          surface: Color(0xFF393E46),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          brightness: Brightness.light,
+          primary: const Color(0xFF355070),
+          secondary: const Color(0xFFB56576),
+          background: const Color(0xFFFDF6EC),
+          surface: const Color(0xFFFBE4D8), // Lighter container color
         ),
       ),
       home: Bottomnav(),

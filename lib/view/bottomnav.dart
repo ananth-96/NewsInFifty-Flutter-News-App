@@ -13,15 +13,15 @@ class _Bottomnav extends State<Bottomnav> {
   final _pageController = PageController();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black, // Optional: match your app theme
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            children: [
-              Newspage(),
+    Widget build(BuildContext context) {
+      return Scaffold(
+        backgroundColor: Color(0xFF355070), // Optional: match your app theme
+        body: Stack(
+          children: [
+            PageView(
+              controller: _pageController,
+              children: [
+                Newspage(),
               TopTen(),
             ],
             onPageChanged: (index) {
@@ -39,7 +39,7 @@ class _Bottomnav extends State<Bottomnav> {
                 width: 250,
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color:  Color(0xFF355070),
                   borderRadius: BorderRadius.circular(50),
                   boxShadow: [
                     BoxShadow(
@@ -58,15 +58,15 @@ class _Bottomnav extends State<Bottomnav> {
                   },
                   items: <BottomBarItem>[
                     BottomBarItem(
-                      icon: Icon(Icons.home),
+                      icon: Icon(Icons.home,color: Colors.white,),
                       title: Text('Home'),
-                      activeColor: Colors.blue,
-                      activeTitleColor: Colors.blue.shade600,
+                      activeColor: Colors.white,
+                      activeTitleColor: Colors.white,
                     ),
                     BottomBarItem(
-                      icon: Icon(Icons.favorite),
+                      icon: Icon(Icons.favorite,color: Colors.white,),
                       title: Text('Top 10'),
-                      activeColor: Colors.red,
+                      activeColor: Colors.white,
                     ),
                   ],
                 ),

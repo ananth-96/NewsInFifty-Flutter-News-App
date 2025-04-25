@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/Widgets/shimmernewspage.dart';
+import 'package:news_app/Widgets/shimmertop10.dart';
 import 'package:news_app/constants/constants.dart';
+import 'package:news_app/controller/api_functions.dart';
+import 'package:news_app/models/newsmodel.dart';
+import 'package:news_app/view/appBar.dart';
+import 'package:news_app/view/newsindetail.dart';
 
 class Newspage extends StatefulWidget {
   const Newspage({super.key});
@@ -9,61 +15,111 @@ class Newspage extends StatefulWidget {
 }
 
 class _NewspageState extends State<Newspage> {
+  List<NewsmodelScience> science = [];
+  List<NewsmodelBusiness> business = [];
+  List<NewsmodelSports> sports = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    allNews();
+  }
+
+  Future<void> allNews() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final scienceData = await NewsApi.getScienceNews();
+    final businessData = await NewsApi.getBusinessNews();
+    final sportsData = await NewsApi.getSportsNews();
+
+    setState(() {
+      science = scienceData;
+      business = businessData;
+      sports = sportsData;
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(65),
+        child: CustomAppBar(),
+      ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(17.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppSpacing.kheight35,
                 Text(
                   'Top Science News',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
-                SizedBox(
-                  height: 270,
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      return NewsContainers(
-                        imageUrl: 'assets/China Weather.jpg',
-                        newsHeadline: 'NASA Screients finds Uranium in Mars',
-                      );
-                    },
-                    itemCount: 10,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                ),
+                isLoading
+                    ? Center(child: ShimmerApp())
+                    : SizedBox(
+                      height: 270,
+                      child: ListView.separated(
+                        separatorBuilder:
+                            (context, index) => SizedBox(width: 10),
+                        itemBuilder: (context, index) {
+                          final news = science[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => Newsindetail(data: news),
+                                ),
+                              );
+                            },
+                            child: NewsContainers(
+                              imageUrl: news.urlToImage,
+                              newsHeadline: news.title,
+                            ),
+                          );
+                        },
+                        itemCount: 10,
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    ),
                 AppSpacing.kheight20,
                 Text(
                   'Top Business News',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 AppSpacing.kheight20,
-                SizedBox(
+                isLoading
+                    ? Center(child: ShimmerApp()):SizedBox(
                   height: 270,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     separatorBuilder: (context, index) => SizedBox(width: 10),
                     itemCount: 10,
                     itemBuilder: (context, index) {
-                      return NewsContainers(
-                        imageUrl: 'assets/Myanmar Protest.jpg',
-                        newsHeadline: 'Sakalyam Opens new branch in London',
+                      final news = business[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Newsindetail(data: news),
+                            ),
+                          );
+                        },
+                        child: NewsContainers(
+                          imageUrl: news.urlToImage,
+                          newsHeadline: news.title,
+                        ),
                       );
                     },
                   ),
@@ -71,30 +127,41 @@ class _NewspageState extends State<Newspage> {
                 AppSpacing.kheight20,
                 Text(
                   'Top Sports News',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 AppSpacing.kheight20,
-                SizedBox(
+                isLoading
+                    ? Center(child: ShimmerApp()):SizedBox(
                   height: 270,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return NewsContainers(
-                        imageUrl: 'assets/Thailand Celebrates Songkran.jpg',
-                        newsHeadline:
-                            'Virat Kohli resigned from all form of cricket',
+                      final news = sports[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Newsindetail(data: news),
+                            ),
+                          );
+                        },
+                        child: NewsContainers(
+                          imageUrl: news.urlToImage,
+                          newsHeadline: news.title,
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) => SizedBox(width: 10),
                     itemCount: 10,
                   ),
-                ),SizedBox(
-  height: MediaQuery.of(context).viewPadding.bottom + kBottomNavigationBarHeight + 40,
-),
+                ),
+                SizedBox(
+                  height:
+                      MediaQuery.of(context).viewPadding.bottom +
+                      kBottomNavigationBarHeight +
+                      40,
+                ),
               ],
             ),
           ),
@@ -113,9 +180,9 @@ class NewsContainers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [BoxShadow(blurRadius: 3.5, color: Colors.blueGrey)],
+        color: Colors.grey.shade800,
+        boxShadow: [BoxShadow(blurRadius: 3.5)],
         borderRadius: BorderRadius.circular(20),
-        color: Colors.yellow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,16 +192,41 @@ class NewsContainers extends StatelessWidget {
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
-            child: Image.asset(
-              imageUrl ?? 'No Image Available',
-              height: 195,
-              width: 200,
-              fit: BoxFit.cover,
-            ),
+            child:
+                imageUrl == null || imageUrl!.isEmpty
+                    ? Container(
+                      height: 195,
+                      width: 180,
+
+                      child: Icon(Icons.image_not_supported, size: 50),
+                    )
+                    : Image.network(
+                      imageUrl!,
+                      height: 195,
+                      width: 180,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 195,
+                          width: 180,
+
+                          child: Icon(Icons.image_not_supported, size: 50),
+                        );
+                      },
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          height: 195,
+                          width: 180,
+
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      },
+                    ),
           ),
           AppSpacing.kheight10,
           SizedBox(
-            width: 200,
+            width: 180,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -142,7 +234,7 @@ class NewsContainers extends StatelessWidget {
                 newsHeadline ?? 'No HeadLine Available',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400,color: Colors.white),
               ),
             ),
           ),
